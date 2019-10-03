@@ -1,0 +1,60 @@
+´<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/main.css">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div id="progress"></div>
+    <div id="gallery"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PreloadJS/1.0.1/preloadjs.min.js"></script>
+    <script>
+    
+        let progress = document.getElementById('progress');
+        let gallery = document.getElementById('gallery');
+
+        var queue = new createjs.LoadQueue(false);
+
+        // Regner procenten ud på processen, og hvad der skal ske
+        queue.on('progress', event => {
+            let progress = Math.floor(event.progress * 100);
+            this.progress.style.width = progress+'%';
+            if(progress == 100) {
+                document.querySelector('body').style.background = 'white';
+            }
+        });
+
+        // Hvad skal der ske når processen er på 100%
+        queue.on('complete', event => {
+            gallery.classList.add('fadeIn');
+            setTimeout(() => {
+                progress.classList.add('fadeOut');
+            }, 500)
+        });
+
+        // Hvilke filer venter vi på
+        queue.on('fileload', handleFileComplete);
+        queue.loadFile('./img/edgar-chaparro-1501184-unsplash.jpg');
+        queue.loadFile('./img/jan-de-keijzer-1491788-unsplash.jpg');
+        queue.loadFile('./img/satellite-1030779.jpg');
+        queue.loadFile('./img/stephan-sorkin-1492676-unsplash.jpg');
+        
+        // Funktionen der viser billederne frem når de er klar fra eventet
+        function handleFileComplete(event) {
+            let item = event.item;
+            let type = item.type;
+
+            if(type == createjs.Types.IMAGE) {
+                gallery.appendChild(event.result);
+            }
+
+        }
+
+    </script>
+</body>
+</html>
